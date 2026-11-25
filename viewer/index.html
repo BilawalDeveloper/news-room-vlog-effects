@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>News Room Vlog Effects Viewer</title>
+  <style>
+    body { margin: 0; background: #0a0e1a; color: white; font-family: system-ui, sans-serif; overflow: hidden; }
+    #room { position: relative; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #1a237e 0%, #0a0e1a 70%); }
+    .stage { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); width: 400px; height: 80px; background: linear-gradient(90deg, #c9a227, #f5e6a3); border-radius: 50%; box-shadow: 0 0 60px #c9a227; }
+    .effect { position: absolute; background: rgba(10, 20, 40, 0.85); border: 1px solid #c9a227; border-radius: 12px; padding: 20px 30px; backdrop-filter: blur(10px); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+    .hidden { opacity: 0; transform: translateY(40px) scale(0.9); pointer-events: none; }
+    #controls { position: absolute; top: 20px; left: 20px; z-index: 10; }
+    button { background: #c9a227; color: #0a0e1a; border: none; padding: 10px 16px; margin: 4px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    button:hover { background: #f5e6a3; }
+    .theme-navy { --accent: #c9a227; }
+    .theme-red { --accent: #e53935; }
+    .theme-teal { --accent: #26a69a; }
+  </style>
+</head>
+<body class="theme-navy">
+  <div id="room">
+    <div class="stage"></div>
+    <div id="effect-container"></div>
+  </div>
+  <div id="controls">
+    <button onclick="loadEffect(7)">Valuation</button>
+    <button onclick="loadEffect(11)">AI Benchmark</button>
+    <button onclick="loadEffect(1)">Breaking</button>
+    <button onclick="loadEffect(16)">Price</button>
+    <button onclick="clearEffects()">Clear</button>
+    <button onclick="setTheme('navy')">Navy/Gold</button>
+    <button onclick="setTheme('red')">Red</button>
+    <button onclick="setTheme('teal')">Teal</button>
+  </div>
+  <script>
+    const effects = {
+      1: { title: 'BREAKING NEWS', subtitle: 'Developing Story', style: 'font-size: 42px; font-weight: 900; letter-spacing: 2px;' },
+      7: { title: '$157B', subtitle: 'Valuation • Series D', style: 'font-size: 56px; font-weight: 800; color: #c9a227;' },
+      11: { title: 'AI BENCHMARK SCORES', subtitle: 'MMLU 92.7% • HumanEval 88.3%', style: 'font-size: 28px;' },
+      16: { title: '$42,995', subtitle: 'Starting MSRP', style: 'font-size: 48px; color: #c9a227;' }
+    };
+    function loadEffect(id) {
+      const container = document.getElementById('effect-container');
+      const data = effects[id] || { title: 'Effect ' + id, subtitle: 'Sample graphic' };
+      const el = document.createElement('div');
+      el.className = 'effect hidden';
+      el.style.top = (20 + Math.random() * 40) + '%';
+      el.style.left = (20 + Math.random() * 40) + '%';
+      el.innerHTML = `<div style="${data.style}">${data.title}</div><div style="opacity:0.8;margin-top:8px;">${data.subtitle}</div>`;
+      container.appendChild(el);
+      requestAnimationFrame(() => el.classList.remove('hidden'));
+    }
+    function clearEffects() {
+      document.getElementById('effect-container').innerHTML = '';
+    }
+    function setTheme(theme) {
+      document.body.className = 'theme-' + theme;
+    }
+  </script>
+</body>
+</html>
