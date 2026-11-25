@@ -5,7 +5,7 @@
   <title>Three.js AI News Room</title>
   <style>
     body { margin: 0; overflow: hidden; background: #0a0e1a; font-family: system-ui, sans-serif; }
-    #info { position: absolute; top: 10px; left: 10px; color: #c9a227; z-index: 100; background: rgba(10,14,26,0.8); padding: 12px; border-radius: 8px; max-width: 320px; }
+    #info { position: absolute; top: 10px; left: 10px; color: #c9a227; z-index: 100; background: rgba(10,14,26,0.8); padding: 12px; border-radius: 8px; max-width: 340px; }
     button { background: #c9a227; color: #0a0e1a; border: none; padding: 6px 10px; margin: 3px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
     button:hover { background: #f5e6a3; }
   </style>
@@ -23,11 +23,12 @@
     <strong>AI News Room — Three.js</strong><br>
     <button onclick="loadEffect('params')">70B Params</button>
     <button onclick="loadEffect('benchmark')">Benchmarks</button>
+    <button onclick="loadBars()">Growing Bars</button>
     <button onclick="loadEffect('vs')">OpenAI vs Anthropic</button>
     <button onclick="loadEffect('valuation')">$157B</button>
-    <button onclick="loadEffect('safety')">Safety Gauge</button>
+    <button onclick="loadEffect('safety')">Safety</button>
     <button onclick="loadEffect('gpu')">GPU Cluster</button>
-    <button onclick="loadEffect('agent')">Agent Demo</button>
+    <button onclick="loadEffect('agent')">Agent</button>
     <button onclick="loadEffect('breaking')">Breaking</button>
     <button onclick="clearEffects()">Clear</button><br>
     <small>Drag to orbit • Scroll to zoom</small>
@@ -62,31 +63,22 @@
     fill.position.set(-5, 5, 5);
     scene.add(fill);
 
-    const stageGeo = new THREE.CylinderGeometry(4, 4.5, 0.3, 64);
-    const stageMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness: 0.6, roughness: 0.3 });
-    const stage = new THREE.Mesh(stageGeo, stageMat);
+    const stage = new THREE.Mesh(new THREE.CylinderGeometry(4, 4.5, 0.3, 64), new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness: 0.6, roughness: 0.3 }));
     stage.position.y = 0.15;
     stage.receiveShadow = true;
     scene.add(stage);
 
-    const ringGeo = new THREE.TorusGeometry(4.2, 0.08, 16, 64);
-    const ringMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.9, roughness: 0.2, emissive: 0xc9a227, emissiveIntensity: 0.3 });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.08, 16, 64), new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.9, roughness: 0.2, emissive: 0xc9a227, emissiveIntensity: 0.3 }));
     ring.rotation.x = Math.PI / 2;
     ring.position.y = 0.32;
     scene.add(ring);
 
-    const wallGeo = new THREE.PlaneGeometry(20, 8);
-    const wallMat = new THREE.MeshStandardMaterial({ color: 0x0d1525, metalness: 0.2, roughness: 0.8 });
-    const wall = new THREE.Mesh(wallGeo, wallMat);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(20, 8), new THREE.MeshStandardMaterial({ color: 0x0d1525 }));
     wall.position.set(0, 4, -8);
     scene.add(wall);
 
     for (let i = 1; i <= 3; i++) {
-      const cRing = new THREE.Mesh(
-        new THREE.TorusGeometry(2 + i * 1.5, 0.05, 8, 64),
-        new THREE.MeshStandardMaterial({ color: 0xc9a227, emissive: 0xc9a227, emissiveIntensity: 0.4 })
-      );
+      const cRing = new THREE.Mesh(new THREE.TorusGeometry(2 + i * 1.5, 0.05, 8, 64), new THREE.MeshStandardMaterial({ color: 0xc9a227, emissive: 0xc9a227, emissiveIntensity: 0.4 }));
       cRing.rotation.x = Math.PI / 2;
       cRing.position.y = 7 - i * 0.3;
       scene.add(cRing);
@@ -98,8 +90,7 @@
 
     function createTextPanel(title, subtitle, color = 0xc9a227) {
       const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 256;
+      canvas.width = 512; canvas.height = 256;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = 'rgba(10, 20, 40, 0.92)';
       ctx.fillRect(0, 0, 512, 256);
@@ -118,6 +109,35 @@
       const mesh = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.1), mat);
       mesh.castShadow = true;
       return mesh;
+    }
+
+    function createGrowingBars() {
+      const group = new THREE.Group();
+      const scores = [0.927, 0.883, 0.716, 0.642];
+      const labels = ['MMLU', 'HumanEval', 'GPQA', 'MATH'];
+      scores.forEach((score, i) => {
+        const bar = new THREE.Mesh(
+          new THREE.BoxGeometry(0.15, 0.1, 0.15),
+          new THREE.MeshStandardMaterial({ color: 0xc9a227, metalness: 0.7, roughness: 0.3, emissive: 0xc9a227, emissiveIntensity: 0.2 })
+        );
+        bar.position.set(-1.2 + i * 0.8, 0.5, 0);
+        bar.scale.y = 0.01;
+        group.add(bar);
+        // Animate growth
+        let h = 0.01;
+        const target = score * 2.2;
+        const grow = () => {
+          h = Math.min(h + 0.03, target);
+          bar.scale.y = h;
+          bar.position.y = 0.5 + h / 2;
+          if (h < target) requestAnimationFrame(grow);
+        };
+        setTimeout(grow, i * 150);
+      });
+      const panel = createTextPanel('AI BENCHMARKS', 'Growing Scores');
+      panel.position.y = 2.2;
+      group.add(panel);
+      return group;
     }
 
     const effectMap = {
@@ -146,6 +166,13 @@
         if (s < 1) requestAnimationFrame(anim);
       };
       anim();
+    };
+
+    window.loadBars = function() {
+      const bars = createGrowingBars();
+      bars.position.set(0, 1.2, -2);
+      effectGroup.add(bars);
+      loaded.push(bars);
     };
 
     window.clearEffects = function() {
