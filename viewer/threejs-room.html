@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Three.js News Room - 3D Effects</title>
+  <title>Three.js AI News Room</title>
   <style>
     body { margin: 0; overflow: hidden; background: #0a0e1a; font-family: system-ui, sans-serif; }
-    #info { position: absolute; top: 10px; left: 10px; color: #c9a227; z-index: 100; background: rgba(10,14,26,0.7); padding: 12px; border-radius: 8px; }
-    button { background: #c9a227; color: #0a0e1a; border: none; padding: 8px 12px; margin: 4px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    #info { position: absolute; top: 10px; left: 10px; color: #c9a227; z-index: 100; background: rgba(10,14,26,0.8); padding: 12px; border-radius: 8px; max-width: 320px; }
+    button { background: #c9a227; color: #0a0e1a; border: none; padding: 6px 10px; margin: 3px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
     button:hover { background: #f5e6a3; }
   </style>
   <script type="importmap">
@@ -20,11 +20,15 @@
 </head>
 <body>
   <div id="info">
-    <strong>Three.js News Room</strong><br>
-    <button onclick="loadEffect('valuation')">Valuation</button>
-    <button onclick="loadEffect('benchmark')">Benchmark</button>
+    <strong>AI News Room — Three.js</strong><br>
+    <button onclick="loadEffect('params')">70B Params</button>
+    <button onclick="loadEffect('benchmark')">Benchmarks</button>
+    <button onclick="loadEffect('vs')">OpenAI vs Anthropic</button>
+    <button onclick="loadEffect('valuation')">$157B</button>
+    <button onclick="loadEffect('safety')">Safety Gauge</button>
+    <button onclick="loadEffect('gpu')">GPU Cluster</button>
+    <button onclick="loadEffect('agent')">Agent Demo</button>
     <button onclick="loadEffect('breaking')">Breaking</button>
-    <button onclick="loadEffect('price')">Price</button>
     <button onclick="clearEffects()">Clear</button><br>
     <small>Drag to orbit • Scroll to zoom</small>
   </div>
@@ -48,7 +52,6 @@
     controls.enableDamping = true;
     controls.target.set(0, 1.5, 0);
 
-    // Lighting
     const ambient = new THREE.AmbientLight(0x404060, 0.6);
     scene.add(ambient);
     const spot = new THREE.SpotLight(0xc9a227, 2, 30, Math.PI / 6, 0.5);
@@ -59,7 +62,6 @@
     fill.position.set(-5, 5, 5);
     scene.add(fill);
 
-    // Floor / Stage
     const stageGeo = new THREE.CylinderGeometry(4, 4.5, 0.3, 64);
     const stageMat = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, metalness: 0.6, roughness: 0.3 });
     const stage = new THREE.Mesh(stageGeo, stageMat);
@@ -74,14 +76,12 @@
     ring.position.y = 0.32;
     scene.add(ring);
 
-    // Back wall with subtle grid
     const wallGeo = new THREE.PlaneGeometry(20, 8);
     const wallMat = new THREE.MeshStandardMaterial({ color: 0x0d1525, metalness: 0.2, roughness: 0.8 });
     const wall = new THREE.Mesh(wallGeo, wallMat);
     wall.position.set(0, 4, -8);
     scene.add(wall);
 
-    // Ceiling rings (simplified)
     for (let i = 1; i <= 3; i++) {
       const cRing = new THREE.Mesh(
         new THREE.TorusGeometry(2 + i * 1.5, 0.05, 8, 64),
@@ -94,7 +94,6 @@
 
     const effectGroup = new THREE.Group();
     scene.add(effectGroup);
-
     const loaded = [];
 
     function createTextPanel(title, subtitle, color = 0xc9a227) {
@@ -102,43 +101,47 @@
       canvas.width = 512;
       canvas.height = 256;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = 'rgba(10, 20, 40, 0.9)';
+      ctx.fillStyle = 'rgba(10, 20, 40, 0.92)';
       ctx.fillRect(0, 0, 512, 256);
       ctx.strokeStyle = '#' + color.toString(16).padStart(6, '0');
-      ctx.lineWidth = 4;
-      ctx.strokeRect(8, 8, 496, 240);
+      ctx.lineWidth = 5;
+      ctx.strokeRect(10, 10, 492, 236);
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 48px system-ui';
+      ctx.font = 'bold 42px system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText(title, 256, 110);
-      ctx.font = '24px system-ui';
+      ctx.fillText(title, 256, 115);
+      ctx.font = '22px system-ui';
       ctx.fillStyle = '#c9a227';
-      ctx.fillText(subtitle, 256, 170);
-
+      ctx.fillText(subtitle, 256, 175);
       const texture = new THREE.CanvasTexture(canvas);
-      const mat = new THREE.MeshStandardMaterial({ map: texture, transparent: true, metalness: 0.3, roughness: 0.4 });
-      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(4, 2), mat);
+      const mat = new THREE.MeshStandardMaterial({ map: texture, transparent: true, metalness: 0.4, roughness: 0.35 });
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 2.1), mat);
       mesh.castShadow = true;
       return mesh;
     }
 
-    window.loadEffect = function(type) {
-      let mesh;
-      if (type === 'valuation') mesh = createTextPanel('$157B', 'Valuation • Series D');
-      else if (type === 'benchmark') mesh = createTextPanel('AI BENCHMARK', 'MMLU 92.7%');
-      else if (type === 'breaking') mesh = createTextPanel('BREAKING NEWS', 'Developing Story', 0xe53935);
-      else if (type === 'price') mesh = createTextPanel('$42,995', 'Starting MSRP');
-      else return;
+    const effectMap = {
+      params: ['70B', 'Parameters'],
+      benchmark: ['AI BENCHMARKS', 'MMLU 92.7%'],
+      vs: ['OpenAI VS Anthropic', 'Model Comparison'],
+      valuation: ['$157B', 'Valuation'],
+      safety: ['Safety Score', '85% Alignment'],
+      gpu: ['10,000 H100s', 'GPU Cluster'],
+      agent: ['AI Agent', 'Task Completed'],
+      breaking: ['BREAKING', 'New Model Released', 0xe53935]
+    };
 
-      mesh.position.set((Math.random() - 0.5) * 4, 2 + Math.random(), -2);
-      mesh.scale.set(0.1, 0.1, 0.1);
+    window.loadEffect = function(type) {
+      const data = effectMap[type];
+      if (!data) return;
+      const mesh = createTextPanel(data[0], data[1], data[2] || 0xc9a227);
+      mesh.position.set((Math.random() - 0.5) * 5, 1.8 + Math.random() * 1.5, -1.5);
+      mesh.scale.set(0.05, 0.05, 0.05);
       effectGroup.add(mesh);
       loaded.push(mesh);
-
-      // Simple scale-in animation
-      let s = 0.1;
+      let s = 0.05;
       const anim = () => {
-        s += 0.05;
+        s = Math.min(s + 0.04, 1);
         mesh.scale.set(s, s, s);
         if (s < 1) requestAnimationFrame(anim);
       };
@@ -153,7 +156,7 @@
     function animate() {
       requestAnimationFrame(animate);
       controls.update();
-      ring.rotation.z += 0.002;
+      ring.rotation.z += 0.0015;
       renderer.render(scene, camera);
     }
     animate();
