@@ -1,0 +1,60 @@
+{
+  "title": "AI News 3D Effects Catalog",
+  "focus": "Artificial Intelligence News",
+  "total_target": 500,
+  "version": "1.0",
+  "theme": "dark navy + gold (switchable)",
+  "purpose": "Reusable 3D effects for AI-focused browser vlogs and virtual news rooms",
+  "ai_assistant_guide": {
+    "how_to_use": "Select an effect by id or category, then load it into the Three.js news room as a floating panel, lower-third, full-screen graphic, or stage element. Pair with relevant data (scores, valuations, model names). Animate in with scale/fly-in, hold 4-8 seconds, then animate out.",
+    "when_to_use": "Use for model releases, benchmark drops, funding rounds, company comparisons, safety announcements, research breakthroughs, or product demos. Match intensity to story importance (Breaking-style for major releases, subtle callouts for updates).",
+    "best_practices": [
+      "Keep text large and high-contrast (gold on navy)",
+      "Use one primary number or comparison per panel",
+      "Combine with room camera orbit for major reveals",
+      "Switch to red-alert theme for safety/controversy stories",
+      "Layer max 2 effects at once to avoid clutter",
+      "Prefer bar charts and big-number callouts for data stories"
+    ],
+    "loading_examples": {
+      "major_release": ["Breaking Banner", "Model Parameter Count", "Benchmark Bars"],
+      "funding": ["Valuation Callout", "Investor Panel"],
+      "comparison": ["Company VS", "Benchmark Comparison"],
+      "safety": ["Alert Flash", "Alignment Score"]
+    }
+  },
+  "categories": [
+    "Model Releases & Specs",
+    "Benchmarks & Scores",
+    "Company Comparisons",
+    "Funding & Valuations",
+    "Safety & Alignment",
+    "Compute & Hardware",
+    "Applications & Demos",
+    "Research Breakthroughs",
+    "Regulation & Ethics",
+    "Market & Adoption"
+  ],
+  "effects": [
+    {"id": 1, "name": "GPT-4o Release Banner", "category": "Model Releases & Specs", "type": "banner", "description": "Large BREAKING-style banner for new model launch", "best_for": "Major model announcements", "usage": "Fly in from top on stage, hold with model name"},
+    {"id": 2, "name": "70B Parameter Callout", "category": "Model Releases & Specs", "type": "callout", "description": "Giant gold 70B Parameters display", "best_for": "Highlighting model size", "usage": "Center stage reveal with count-up animation"},
+    {"id": 3, "name": "Context Window Size", "category": "Model Releases & Specs", "type": "callout", "description": "Large 128K or 1M context length", "best_for": "Long-context model stories", "usage": "Pair with benchmark bars"},
+    {"id": 4, "name": "Multimodal Badge", "category": "Model Releases & Specs", "type": "badge", "description": "Vision + Text + Audio capability icons", "best_for": "Multimodal releases", "usage": "Lower-third or corner overlay"},
+    {"id": 5, "name": "MMLU Score Bars", "category": "Benchmarks & Scores", "type": "chart", "description": "Horizontal gold bars for MMLU and related scores", "best_for": "Any benchmark drop", "usage": "Animate bars growing from left"},
+    {"id": 6, "name": "HumanEval Coding Score", "category": "Benchmarks & Scores", "type": "chart", "description": "Dedicated coding benchmark panel", "best_for": "Code-focused model stories", "usage": "Standalone or next to MMLU"},
+    {"id": 7, "name": "GPQA Diamond Score", "category": "Benchmarks & Scores", "type": "callout", "description": "Hard reasoning benchmark highlight", "best_for": "Advanced reasoning claims", "usage": "Big number with subtle glow"},
+    {"id": 8, "name": "Arena Elo Ranking", "category": "Benchmarks & Scores", "type": "leaderboard", "description": "LMSYS-style ranking list", "best_for": "Head-to-head model rankings", "usage": "Scroll or highlight top models"},
+    {"id": 9, "name": "OpenAI vs Anthropic", "category": "Company Comparisons", "type": "comparison", "description": "Split panel VS layout", "best_for": "Direct company rivalry stories", "usage": "Center VS gold text, load both sides"},
+    {"id": 10, "name": "Claude vs GPT Feature Split", "category": "Company Comparisons", "type": "comparison", "description": "Feature-by-feature comparison", "best_for": "Product capability stories", "usage": "Icons + short labels on each side"},
+    {"id": 11, "name": "$157B Valuation", "category": "Funding & Valuations", "type": "callout", "description": "Massive gold valuation number", "best_for": "Funding round announcements", "usage": "Rise from stage with diamond icon"},
+    {"id": 12, "name": "Series Round Panel", "category": "Funding & Valuations", "type": "panel", "description": "Series D / E with lead investor", "best_for": "Investment news", "usage": "Lower-third style or floating card"},
+    {"id": 13, "name": "Safety Score Gauge", "category": "Safety & Alignment", "type": "gauge", "description": "Alignment or safety rating dial", "best_for": "Safety research or incident stories", "usage": "Pulse if score is low"},
+    {"id": 14, "name": "Constitutional AI Badge", "category": "Safety & Alignment", "type": "badge", "description": "Anthropic-style safety approach highlight", "best_for": "Alignment methodology news", "usage": "Corner or lower-third"},
+    {"id": 15, "name": "Red Team Results", "category": "Safety & Alignment", "type": "chart", "description": "Jailbreak or red-team success rates", "best_for": "Security and safety tests", "usage": "Bars with warning color option"},
+    {"id": 16, "name": "GPU Cluster Size", "category": "Compute & Hardware", "type": "callout", "description": "Number of H100s or training FLOPs", "best_for": "Infrastructure stories", "usage": "Big number with chip icon"},
+    {"id": 17, "name": "Training Cost Estimate", "category": "Compute & Hardware", "type": "callout", "description": "Estimated $ cost of training run", "best_for": "Scale and expense discussions", "usage": "Pair with valuation"},
+    {"id": 18, "name": "Inference Speed Meter", "category": "Compute & Hardware", "type": "gauge", "description": "Tokens per second display", "best_for": "Performance and latency news", "usage": "Animated needle"},
+    {"id": 19, "name": "Agent Demo Panel", "category": "Applications & Demos", "type": "panel", "description": "AI agent completing a task", "best_for": "Product demo or capability stories", "usage": "Step-by-step reveal"},
+    {"id": 20, "name": "Coding Assistant Highlight", "category": "Applications & Demos", "type": "callout", "description": "Code completion or debugging score", "best_for": "Developer tool news", "usage": "Show code snippet + score"}
+  ]
+}
