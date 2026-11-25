@@ -13,7 +13,8 @@ These effects are meant to be displayed **inside** the navy/gold circular-stage 
 ## Structure
 - `effects-catalog.json` — Full catalog of 100 effects with id, name, category, type, and description
 - `themes.json` — Color theme variants (navy-gold, red-alert, teal-modern, purple-premium)
-- `viewer/index.html` — Sample browser viewer that shows the news room stage and loads sample effects with theme switching
+- `viewer/index.html` — Simple 2D browser viewer with stage and sample effects + theme switching
+- `viewer/threejs-room.html` — **Full Three.js 3D news room** with circular stage, lighting, orbit controls, and loadable 3D text panels for effects
 
 ## Categories
 1. Breaking & Alerts
@@ -28,18 +29,14 @@ These effects are meant to be displayed **inside** the navy/gold circular-stage 
 10. Transitions & Atmosphere
 
 ## Usage in Browser Vlog
-Open `viewer/index.html` in a browser to see the demo. Load any effect into the news room scene as:
-- Floating 3D panels
-- Lower thirds
-- Full-screen graphics
-- Stage-based elements
-- Camera animations
+- Open `viewer/index.html` for the lightweight 2D version.
+- Open `viewer/threejs-room.html` for the full 3D experience (drag to orbit, scroll to zoom, click buttons to load effects as 3D panels).
 
-The room acts as the main persistent environment; individual effects are loaded and animated in/out on demand. Switch color themes via the buttons in the viewer.
+The room acts as the main persistent environment; individual effects are loaded and animated in/out on demand. Switch color themes via the buttons in the viewers.
 
 ## Next Steps
-- Add full Three.js / WebGL implementations for 3D depth
+- Expand Three.js effects with more 3D models, particle systems, and data-driven charts
 - Create animated preview GIFs for each effect
-- Expand with more specific data-driven examples
+- Add more interactive controls and data binding
 
 Created for the navy/gold virtual news studio project.
