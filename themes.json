@@ -1,0 +1,36 @@
+{
+  "themes": {
+    "navy-gold": {
+      "background": "#0a0e1a",
+      "panel": "#0d1525",
+      "accent": "#c9a227",
+      "accentLight": "#f5e6a3",
+      "text": "#ffffff",
+      "secondary": "#a0aec0"
+    },
+    "red-alert": {
+      "background": "#1a0a0a",
+      "panel": "#2a1010",
+      "accent": "#e53935",
+      "accentLight": "#ff6b6b",
+      "text": "#ffffff",
+      "secondary": "#ffcdd2"
+    },
+    "teal-modern": {
+      "background": "#0a1a1a",
+      "panel": "#0d2525",
+      "accent": "#26a69a",
+      "accentLight": "#4dd0e1",
+      "text": "#ffffff",
+      "secondary": "#b2dfdb"
+    },
+    "purple-premium": {
+      "background": "#0f0a1a",
+      "panel": "#1a1025",
+      "accent": "#ab47bc",
+      "accentLight": "#ce93d8",
+      "text": "#ffffff",
+      "secondary": "#e1bee7"
+    }
+  }
+}
