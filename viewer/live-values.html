@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live values board</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; height: 100%; background: #07090d; color: #f4f1ea; font-family: system-ui, sans-serif; }
+    aside { position: fixed; top: 16px; right: 16px; width: min(22rem, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; background: rgba(7,9,13,.86); border: 1px solid rgba(225,6,0,.45); border-radius: 8px; padding: 12px; z-index: 2; }
+    h1 { margin: 0; font-family: "Barlow Condensed", sans-serif; letter-spacing: .14em; color: #e4c36a; font-size: 1.1rem; }
+    p { color: #b7b1a6; font-size: 13px; }
+    label { display: block; margin-top: 8px; font-size: 12px; color: #b7b1a6; }
+    input, textarea { width: 100%; box-sizing: border-box; margin-top: 4px; min-height: 40px; background: #07090d; color: #f4f1ea; border: 1px solid rgba(225,6,0,.45); border-radius: 4px; padding: 8px; }
+    button { min-height: 40px; margin: 4px 4px 0 0; background: #e10600; color: #f4f1ea; border: 0; border-radius: 4px; padding: 0 12px; cursor: pointer; }
+    code { color: #e4c36a; }
+  </style>
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.170.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+  <div id="view"></div>
+  <aside>
+    <h1>LIVE VALUES</h1>
+    <p>Pass real copy with <code>SignalBoard.show({ headline, gauge, rows })</code>. The plate redraws. No baked screenshot.</p>
+    <div id="presets"></div>
+    <label>Gauge %<input id="gauge" type="number" min="0" max="100" /></label>
+    <label>Headline<input id="headline" /></label>
+    <label>Subline<input id="subline" /></label>
+    <label>Status<input id="status" /></label>
+    <label>Footer value<input id="footerValue" /></label>
+    <label>Rows<textarea id="rows" rows="4"></textarea></label>
+  </aside>
+  <script type="module">
+    import * as THREE from "three";
+    import { PRESETS, drawBoard } from "./board.js";
+    const paint = document.createElement("canvas");
+    paint.width = 2048; paint.height = 1152;
+    let spec = structuredClone(PRESETS.regulation);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    document.getElementById("view").appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x07090d);
+    const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 80);
+    camera.position.set(1.4, 1.2, 8.2);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const key = new THREE.SpotLight(0xfff2e0, 26, 30, 0.5, 0.4, 1);
+    key.position.set(2, 7, 6); scene.add(key);
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(14, 48), new THREE.MeshStandardMaterial({ color: 0x121212, metalness: 0.85, roughness: 0.3 }));
+    floor.rotation.x = -Math.PI / 2; scene.add(floor);
+    const map = new THREE.CanvasTexture(paint);
+    map.colorSpace = THREE.SRGBColorSpace;
+    const group = new THREE.Group();
+    group.position.set(-0.4, 1.5, 0);
+    group.rotation.y = -0.35;
+    scene.add(group);
+    group.add(new THREE.Mesh(new THREE.BoxGeometry(5.35, 3.02, 0.16), new THREE.MeshStandardMaterial({ color: 0x1a1c20, metalness: 0.8, roughness: 0.32 })));
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 2.92), new THREE.MeshStandardMaterial({ map, roughness: 0.45, metalness: 0.05 }));
+    face.position.z = 0.09; group.add(face);
+    const ids = ["headline", "subline", "status", "footerValue", "gauge", "rows"];
+    function fillForm() {
+      for (const id of ids) document.getElementById(id).value = id === "rows" ? spec.rows.join("\n") : spec[id];
+    }
+    function show(next) {
+      spec = { ...spec, ...next };
+      if (typeof spec.gauge === "string") spec.gauge = Number(spec.gauge);
+      drawBoard(paint, spec);
+      map.needsUpdate = true;
+      fillForm();
+    }
+    window.SignalBoard = { show, presets: PRESETS, drawBoard };
+    for (const id of ids) {
+      document.getElementById(id).addEventListener("input", (event) => {
+        const value = event.target.value;
+        if (id === "rows") show({ rows: value.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 4) });
+        else if (id === "gauge") show({ gauge: Number(value) });
+        else show({ [id]: value });
+      });
+    }
+    for (const name of Object.keys(PRESETS)) {
+      const button = document.createElement("button");
+      button.textContent = name;
+      button.addEventListener("click", () => show(structuredClone(PRESETS[name])));
+      document.getElementById("presets").appendChild(button);
+    }
+    show(spec);
+    addEventListener("resize", () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+    (function loop() {
+      requestAnimationFrame(loop);
+      renderer.render(scene, camera);
+    })();
+  </script>
+</body>
+</html>
